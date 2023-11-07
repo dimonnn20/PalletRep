@@ -24,6 +24,7 @@ namespace PalletRep.Logic
                 }
 
             }
+            Logger.Logger.Log.Info($"Data is successfully written to the file {fileName}");
         }
     }
 }

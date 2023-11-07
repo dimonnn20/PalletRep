@@ -14,22 +14,17 @@ namespace PalletRep.Logic
     {
         public void Save(List<Layout> layouts)
         {
-            Logger.Logger.Log.Debug("Method Save from DB Saver started working");
             string connectionString = ConfigurationManager.AppSettings["connectionString"];
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                Logger.Logger.Log.Debug("Trying to open connection to database");
                 try
                 {
                     connection.Open();
                 }
                 catch (Exception ex)
                 {
-                    Logger.Logger.Log.Debug("Exception to open connection ", ex);
+                    Logger.Logger.Log.Error("Exception to open connection to database ", ex);
                 }
-
-                Logger.Logger.Log.Debug("Connection to database is opened");
-                //*****************************************
                 StringBuilder stringBuilder = new StringBuilder();
                 string date = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss");
                 foreach (Layout layout in layouts)
@@ -40,11 +35,9 @@ namespace PalletRep.Logic
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
 
-                    Logger.Logger.Log.Debug($"Successfully added {command.ExecuteNonQuery()} line(s)");
+                    Logger.Logger.Log.Info($"Successfully added {command.ExecuteNonQuery()} line(s) to database");
                 }
-                //*****************************************
                 connection.Close();
-                Logger.Logger.Log.Debug("Connection to database is closed");
             }
         }
     }

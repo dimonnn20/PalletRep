@@ -10,12 +10,12 @@ namespace PalletRep.Logic
     internal class MyServiceLogic
     {
         private bool _isRunning = true;
-        private SFTPConnection _connection;
+        private readonly SFTPConnection Connection;
         
 
-        public MyServiceLogic()
+        public MyServiceLogic(SFTPConnection connection)
         {
-            _connection = new SFTPConnection();
+            Connection = connection;
         }
 
         public async Task StartAsync()
@@ -24,17 +24,14 @@ namespace PalletRep.Logic
             {
                 while (_isRunning)
                 {
-                    await _connection.CheckAndProceedFile();
+                    Connection.CheckAndProceedFile();
                     await Task.Delay(Convert.ToInt32(ConfigurationManager.AppSettings["Timeout"]));
                 }
             }
-
             catch (Exception ex)
             {
-
+                Logger.Logger.Log.Error("Exception ",ex);
             }
-
-
         }
 
         public void Stop()

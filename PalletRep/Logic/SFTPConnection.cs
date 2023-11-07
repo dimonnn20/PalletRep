@@ -15,31 +15,31 @@ namespace PalletRep.Logic
 {
     internal class SFTPConnection
     {
-        private readonly string _host;
-        private readonly string _username = "logopak";
-        private readonly string _password = "J6DqVm&y";
+        private readonly string Host;
+        private readonly string Username = ConfigurationManager.AppSettings["Username"];
+        private readonly string Password = ConfigurationManager.AppSettings["Password"];
         //private string _remotePath = "/userapp/software/draw/log/leap.log";
-        private string _remotePath = ConfigurationManager.AppSettings["RemotePath"];
+        private readonly string RemotePath;
+        private readonly LeapLogParser LeapLogParser;
 
         private List<string> lines;
 
-        public SFTPConnection()
+        public SFTPConnection(LeapLogParser leap)
         {
             try
             {
-                _host = ConfigurationManager.AppSettings["IP"];
+                Host = ConfigurationManager.AppSettings["IP"];
+                RemotePath = ConfigurationManager.AppSettings["RemotePath"];
             }
             catch (Exception ex)
             {
-                Logger.Logger.Log.Debug("Exception to pars IP from config ",ex);
+                Logger.Logger.Log.Error("Exception to pars IP or connectionString from App.config ", ex);
             }
+            LeapLogParser = leap;
         }
 
-        public async Task CheckAndProceedFile()
+        public void CheckAndProceedFile()
         {
-            Logger.Logger.Log.Debug("CheckAndProceedFile started working");
-            await Task.Run(() =>
-            {
                 //    using (SftpClient sftp = new SftpClient(_host, _username, _password))
                 //    {
                 //        sftp.Connect();
@@ -63,14 +63,12 @@ namespace PalletRep.Logic
                 //            }
                 //        }
                 //    }
-                //});
 
-                Logger.Logger.Log.Debug("Check for file");
-                if (File.Exists(_remotePath))
+                if (File.Exists(RemotePath))
                 {
-                    Logger.Logger.Log.Debug("File exists");
-                    lines = new List<string>();
-                    using (var stream = new FileStream(_remotePath, FileMode.OpenOrCreate))
+                Logger.Logger.Log.Info("File leap.log exists");
+                lines = new List<string>();
+                    using (var stream = new FileStream(RemotePath, FileMode.OpenOrCreate))
                     {
                         using (StreamReader reader = new StreamReader(stream))
                         {
@@ -79,15 +77,13 @@ namespace PalletRep.Logic
                             {
                                 lines.Add(line);
                             }
-                            Logger.Logger.Log.Debug("Read from file is successful");
-                            LeapLogParser leapLogParser = new LeapLogParser();
-                            leapLogParser.Proceed(lines);
+                            Logger.Logger.Log.Info("Infromation from file leap.log readed successfuly");
+                            LeapLogParser.Proceed(lines);
                         }
                     }
-                    File.Delete(_remotePath);
-                    Logger.Logger.Log.Debug("File leap.log is deleted");
+                    File.Delete(RemotePath);
+                    Logger.Logger.Log.Info("File leap.log is deleted");
                 }
-            });
         }
 
        
