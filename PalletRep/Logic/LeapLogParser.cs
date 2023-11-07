@@ -12,41 +12,32 @@ namespace PalletRep.Logic
     internal class LeapLogParser
     {
         private ISaveable _saveable;
-        private readonly string _mode;
-        private const string patter = @"(\d{2}/\d{2}/\d{4});(\d{2}:\d{2}:\d{2});(00\d{18}$)";
+        private readonly string Mode = ConfigurationManager.AppSettings["Mode"];
+        private const string Patter = @"(\d{2}/\d{2}/\d{4});(\d{2}:\d{2}:\d{2});(00\d{18}$)";
 
-        public LeapLogParser()
-        {
-            try 
-            { 
-            _mode = ConfigurationManager.AppSettings["Mode"];
-            } catch (Exception ex)
-            {
-                Logger.Logger.Log.Error("Exception to parse Mode from App.config ",ex);
-            }
-            
-        }
 
-        public void Proceed(List<string> lines)
+        public async void Proceed(List<string> lines)
         {
-            List<Layout> layouts = deserialize(lines);
-            if (_mode.Equals("TXT"))
+            List<Layout> layouts = Deserialize(lines);
+
+            if (Mode.Equals("TXT"))
             {
                 _saveable = new FileSaver();
-                _saveable.Save(layouts);
+                await _saveable.Save(layouts);
             }
-            else if (_mode.Equals("DB"))
+            else if (Mode.Equals("DB"))
             {
 
                 _saveable = new DBSaver();
-                _saveable.Save(layouts);
+                await _saveable.Save(layouts);
+
             }
-            else if (_mode.Equals("TXT and DB"))
+            else if (Mode.Equals("TXT and DB"))
             {
                 _saveable = new FileSaver();
-                _saveable.Save(layouts);
+                await _saveable.Save(layouts);
                 _saveable = new DBSaver();
-                _saveable.Save(layouts);
+                await _saveable.Save(layouts);
             }
             else
             {
@@ -55,14 +46,14 @@ namespace PalletRep.Logic
             }
         }
 
-        private List<Layout> deserialize(List<string> lines)
+        private List<Layout> Deserialize(List<string> lines)
         {
             bool isFileCorrect = false;
             List<Layout> layouts = new List<Layout>();
 
             foreach (string line in lines)
             {
-                if (checkLine(line))
+                if (CheckLine(line))
                 {
                     string[] array = line.Split(';');
                     StringBuilder dateTime = new StringBuilder();
@@ -79,25 +70,25 @@ namespace PalletRep.Logic
                     Logger.Logger.Log.Error($"The line {line} in file leap.log is incorrect and was not proceeded");
                 }
             }
-            if (!isFileCorrect) 
+            if (!isFileCorrect)
             {
                 Logger.Logger.Log.Error($"The file leap.log contains incorrect data, please check the file and restart service");
-                throw new Exception(); 
-               
-                
+                throw new Exception();
+
+
             }
             return layouts;
         }
 
-        private bool checkLine (string line)
+        private bool CheckLine(string line)
         {
             bool isCorrect = false;
-            Match match = Regex.Match(line, patter);
-            if (match.Success) 
-            { 
+            Match match = Regex.Match(line, Patter);
+            if (match.Success)
+            {
                 isCorrect = true;
             }
-                return isCorrect;
+            return isCorrect;
         }
     }
 }

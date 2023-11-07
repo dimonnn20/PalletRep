@@ -24,14 +24,15 @@ namespace PalletRep.Logic
             {
                 while (_isRunning)
                 {
-                    Connection.CheckAndProceedFile();
+                    await Connection.CheckAndProceedFile();
                     await Task.Delay(Convert.ToInt32(ConfigurationManager.AppSettings["Timeout"]));
                 }
             }
             catch (Exception ex)
             {
-                Logger.Logger.Log.Error("Exception ",ex);
-            }
+                Logger.Logger.Log.Error("Exception occurred in CheckAndProceedFile "+ex.ToString());
+                Stop();
+            } 
         }
 
         public void Stop()
