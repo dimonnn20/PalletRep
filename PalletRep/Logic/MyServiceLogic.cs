@@ -11,7 +11,7 @@ namespace PalletRep.Logic
     {
         private bool _isRunning = true;
         private readonly SFTPConnection Connection;
-        
+
 
         public MyServiceLogic(SFTPConnection connection)
         {
@@ -20,18 +20,11 @@ namespace PalletRep.Logic
 
         public async Task StartAsync()
         {
-            try
-            {
                 while (_isRunning)
                 {
                     Connection.CheckAndProceedFile();
                     await Task.Delay(Convert.ToInt32(ConfigurationManager.AppSettings["Timeout"]));
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.Logger.Log.Error("Exception ",ex);
-            }
         }
 
         public void Stop()
