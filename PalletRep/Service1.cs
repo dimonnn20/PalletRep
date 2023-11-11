@@ -16,13 +16,16 @@ namespace PalletRep
     {
 
         private MyServiceLogic _serviceLogic;
+        private ServiceController sc;
         public Service1()
         {
             InitializeComponent();
+             sc = new ServiceController();
         }
 
         protected override async void OnStart(string[] args)
         {
+            
             string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log4net.config");
             log4net.Config.XmlConfigurator.Configure(new FileInfo(configFilePath));
             LeapLogParser leapParser = new LeapLogParser();
@@ -37,8 +40,6 @@ namespace PalletRep
             {
                 Logger.Logger.Log.Error("Exception in _serviceLogic and try to stop the service ", ex);
                 OnStop();
-                ServiceController serviceController = new ServiceController("Service1");
-                serviceController.Stop();
             }
 
 
@@ -61,9 +62,12 @@ namespace PalletRep
 
         protected override void OnStop()
         {
-            _serviceLogic.Stop();
-            Logger.Logger.Log.Info("Service stopped");
-
+           sc.Stop();
+            //_serviceLogic.Stop();
+            //Logger.Logger.Log.Info("Service stopped");
+            //ServiceController serviceController = new ServiceController("Service1");
+            //serviceController.Stop();
+            
         }
     }
 }

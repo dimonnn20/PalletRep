@@ -73,7 +73,7 @@ namespace PalletRep.Logic
                                 {
                                     lines.Add(line);
                                 }
-                                Logger.Logger.Log.Info("Infromation from file leap.log readed successfuly");
+                                Logger.Logger.Log.Info("Information from file leap.log readed successfuly");
                                 LeapLogParser.Proceed(lines);
                                 sftp.Delete(RemotePathSFTP);
                                 Logger.Logger.Log.Info("File leap.log is deleted");

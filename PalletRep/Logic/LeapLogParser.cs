@@ -35,6 +35,7 @@ namespace PalletRep.Logic
                     _saveable = new DBSaver();
                     _saveable.Save(layouts);
                 }
+
             } else {
                 Logger.Logger.Log.Error("Exception in App.config, line [Mode]");
                 throw new Exception("Exception in App.config, line [Mode]");
