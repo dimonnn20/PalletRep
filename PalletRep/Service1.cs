@@ -20,10 +20,9 @@ namespace PalletRep
         public Service1()
         {
             InitializeComponent();
-             sc = new ServiceController();
         }
 
-        protected override async void OnStart(string[] args)
+        protected override void OnStart(string[] args)
         {
             
             string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log4net.config");
@@ -32,41 +31,25 @@ namespace PalletRep
             SFTPConnection connection = new SFTPConnection(leapParser);
             _serviceLogic = new MyServiceLogic(connection);
             Logger.Logger.Log.Info("Service started");
-            try
-            {
-                await _serviceLogic.StartAsync();
-            }
-            catch (Exception ex)
-            {
-                Logger.Logger.Log.Error("Exception in _serviceLogic and try to stop the service ", ex);
-                OnStop();
-            }
 
-
-            //Task.Run(async () =>
-            //{
-            //    try
-            //    {
-            //        await _serviceLogic.StartAsync();
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Logger.Logger.Log.Error("Exception in _serviceLogic and try to stop the service ", ex);
-            //        OnStop();
-            //        ServiceController serviceController = new ServiceController("Service1");
-            //        serviceController.Stop();
-            //    }
-            //});
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await _serviceLogic.StartAsync();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Logger.Log.Error("Exception in _serviceLogic and try to stop the service ", ex);
+                    Stop();
+                }
+            });
         }
 
 
         protected override void OnStop()
         {
-           sc.Stop();
-            //_serviceLogic.Stop();
-            //Logger.Logger.Log.Info("Service stopped");
-            //ServiceController serviceController = new ServiceController("Service1");
-            //serviceController.Stop();
+
             
         }
     }
