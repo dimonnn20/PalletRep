@@ -11,7 +11,7 @@ namespace PalletRep.Logic
 {
     internal class FileSaver : ISaveable
     {
-        public void Save(List<Layout> layouts)
+        public async Task Save(List<Layout> layouts)
         {
             string fileName = $"{DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")}.txt";
             string pathToSave = ConfigurationManager.AppSettings["PathToSaveReport"]+fileName;
@@ -20,7 +20,7 @@ namespace PalletRep.Logic
                 foreach (Layout layout in layouts)
                 {
                     string layoutString = layout.ToString();
-                    stream.Write(Encoding.Default.GetBytes(layoutString), 0, layoutString.Length);
+                    await stream.WriteAsync(Encoding.Default.GetBytes(layoutString), 0, layoutString.Length);
                 }
 
             }

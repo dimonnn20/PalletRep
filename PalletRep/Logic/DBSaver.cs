@@ -12,14 +12,14 @@ namespace PalletRep.Logic
 {
     internal class DBSaver : ISaveable
     {
-        public void Save(List<Layout> layouts)
+        public async Task Save(List<Layout> layouts)
         {
             string connectionString = ConfigurationManager.AppSettings["connectionString"];
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 try
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                 }
                 catch (Exception ex)
                 {

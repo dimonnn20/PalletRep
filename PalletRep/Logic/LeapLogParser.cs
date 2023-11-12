@@ -19,7 +19,7 @@ namespace PalletRep.Logic
         {   
         }
 
-        public void Proceed(List<string> lines)
+        public async Task Proceed(List<string> lines)
         {
             List<Layout> layouts = Deserialize(lines);
             if (Mode.Contains("DB") || Mode.Contains("TXT"))
@@ -27,13 +27,13 @@ namespace PalletRep.Logic
                 if (Mode.Contains("TXT"))
                 {
                     _saveable = new FileSaver();
-                    _saveable.Save(layouts);
+                    await _saveable.Save(layouts);
                 }
                 if (Mode.Contains("DB"))
                 {
 
                     _saveable = new DBSaver();
-                    _saveable.Save(layouts);
+                    await _saveable.Save(layouts);
                 }
 
             } else {

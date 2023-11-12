@@ -9,6 +9,6 @@ namespace PalletRep.Logic
 {
     internal interface ISaveable
     {
-        void Save(List <Layout> layouts);
+        Task Save(List <Layout> layouts);
     }
 }

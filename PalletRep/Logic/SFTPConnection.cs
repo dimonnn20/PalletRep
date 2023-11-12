@@ -28,7 +28,7 @@ namespace PalletRep.Logic
             LeapLogParser = leap;
         }
 
-        public void CheckAndProceedFile()
+        public async Task CheckAndProceedFile()
         {
             if (ConfigurationManager.AppSettings["Test"].Equals("Yes"))
             {
@@ -48,7 +48,7 @@ namespace PalletRep.Logic
                                 lines.Add(line);
                             }
                             Logger.Logger.Log.Info("Information from file leap.log readed successfuly");
-                            LeapLogParser.Proceed(lines);
+                            await LeapLogParser.Proceed(lines);
                         }
                     }
                     File.Delete(RemotePath);
@@ -74,7 +74,7 @@ namespace PalletRep.Logic
                                     lines.Add(line);
                                 }
                                 Logger.Logger.Log.Info("Information from file leap.log readed successfuly");
-                                LeapLogParser.Proceed(lines);
+                                await LeapLogParser.Proceed(lines);
                                 sftp.Delete(RemotePathSFTP);
                                 Logger.Logger.Log.Info("File leap.log is deleted");
                                 sftp.Disconnect();
