@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,9 +11,9 @@ namespace PalletRep.Model
     internal class Layout
     {
         public string Sscc { get; set; }
-        public string Date { get; set; }
+        public DateTime Date { get; set; }
 
-        public Layout(string sscc, string date)
+        public Layout(string sscc, DateTime date)
         {
             Sscc = sscc;
             Date = date;
@@ -20,7 +21,7 @@ namespace PalletRep.Model
 
         public override string ToString()
         {
-            return  $"[SSCC = {Sscc} ,date = {Date}]\n"; ;
+            return  $"[SSCC = {Sscc} ,date = {Date.ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("en-US"))}]\n"; ;
         }
     }
 }

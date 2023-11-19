@@ -42,6 +42,8 @@
             this.AAAAAAAAAAAAAAAAAAAAAAAA.Description = "AAAAAAAAAAAAAAAAA";
             this.AAAAAAAAAAAAAAAAAAAAAAAA.DisplayName = "AAAAAAAAAAAAAAAAAAA";
             this.AAAAAAAAAAAAAAAAAAAAAAAA.ServiceName = "Service1";
+            this.AAAAAAAAAAAAAAAAAAAAAAAA.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
+            this.AAAAAAAAAAAAAAAAAAAAAAAA.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.AAAAAAAAAAAAAAAAAAAAAAAA_AfterInstall);
             // 
             // ProjectInstaller
             // 

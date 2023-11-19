@@ -5,6 +5,8 @@ VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PalletRep", "PalletRep\PalletRep.csproj", "{53EE943E-D6BE-4FBB-92F3-0D10A6B5514B}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupPalletRep", "SetupPalletRep\SetupPalletRep.vdproj", "{A0E4795A-1881-4D8C-8579-06FFE2F66D22}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,8 @@ Global
 		{53EE943E-D6BE-4FBB-92F3-0D10A6B5514B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53EE943E-D6BE-4FBB-92F3-0D10A6B5514B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53EE943E-D6BE-4FBB-92F3-0D10A6B5514B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0E4795A-1881-4D8C-8579-06FFE2F66D22}.Debug|Any CPU.ActiveCfg = Debug
+		{A0E4795A-1881-4D8C-8579-06FFE2F66D22}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

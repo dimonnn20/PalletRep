@@ -32,56 +32,67 @@ namespace PalletRep.Logic
         {
             if (ConfigurationManager.AppSettings["Test"].Equals("Yes"))
             {
-                if (File.Exists(RemotePath))
+                try
                 {
-
-
-                    Logger.Logger.Log.Info("File leap.log detected");
-                    lines = new List<string>();
-                    using (var stream = new FileStream(RemotePath, FileMode.OpenOrCreate))
+                    if (File.Exists(RemotePath))
                     {
-                        using (StreamReader reader = new StreamReader(stream))
-                        {
-                            string line;
-                            while ((line = reader.ReadLine()) != null)
-                            {
-                                lines.Add(line);
-                            }
-                            Logger.Logger.Log.Info("Information from file leap.log readed successfuly");
-                            await LeapLogParser.Proceed(lines);
-                        }
-                    }
-                    File.Delete(RemotePath);
-                    Logger.Logger.Log.Info("File leap.log is deleted");
-                }
-
-            }
-            else
-            {
-                using (SftpClient sftp = new SftpClient(Host, Username, Password))
-                {
-                    sftp.Connect();
-                    if (sftp.Exists(RemotePathSFTP))
-                    {
+                        Logger.Logger.Log.Info("File leap.log detected");
                         lines = new List<string>();
-                        using (SftpFileStream fileStream = sftp.OpenRead(RemotePathSFTP))
+                        using (var stream = new FileStream(RemotePath, FileMode.OpenOrCreate))
                         {
-                            using (StreamReader reader = new StreamReader(fileStream))
+                            using (StreamReader reader = new StreamReader(stream))
                             {
                                 string line;
-                                while ((line = reader.ReadLine()) != null)
+                                while ((line = await reader.ReadLineAsync()) != null)
                                 {
                                     lines.Add(line);
                                 }
                                 Logger.Logger.Log.Info("Information from file leap.log readed successfuly");
                                 await LeapLogParser.Proceed(lines);
-                                sftp.Delete(RemotePathSFTP);
-                                Logger.Logger.Log.Info("File leap.log is deleted");
-                                sftp.Disconnect();
+                            }
+                        }
+                        File.Delete(RemotePath);
+                        Logger.Logger.Log.Info("File leap.log is deleted");
+                    }
+                } catch (Exception ex)
+                {
+                    Logger.Logger.Log.Error("Exception during file folder connection, details below:\n" + ex.ToString());
+                }
+
+            }
+            else
+            {
+                try
+                {
+                    using (SftpClient sftp = new SftpClient(Host, Username, Password))
+                    {
+                        sftp.Connect();
+                        if (sftp.Exists(RemotePathSFTP))
+                        {
+                            lines = new List<string>();
+                            using (SftpFileStream fileStream = sftp.OpenRead(RemotePathSFTP))
+                            {
+                                using (StreamReader reader = new StreamReader(fileStream))
+                                {
+                                    string line;
+                                    while ((line = reader.ReadLine()) != null)
+                                    {
+                                        lines.Add(line);
+                                    }
+                                    Logger.Logger.Log.Info("Information from file leap.log readed successfuly");
+                                    await LeapLogParser.Proceed(lines);
+                                    sftp.Delete(RemotePathSFTP);
+                                    Logger.Logger.Log.Info("File leap.log is deleted");
+                                    sftp.Disconnect();
+                                }
                             }
                         }
                     }
+                } catch (Exception ex) 
+                {
+                    Logger.Logger.Log.Error("Exception during SFTP connection, details below:\n"+ex.ToString());
                 }
+                
             }
         }
     }

@@ -52,12 +52,16 @@ namespace PalletRep.Logic
                 if (CheckLine(line))
                 {
                     string[] array = line.Split(';');
-                    StringBuilder dateTime = new StringBuilder();
-                    dateTime.Append(array[0].Trim());
-                    dateTime.Append(' ');
-                    dateTime.Append(array[1].Trim());
+                    StringBuilder dateTimeString = new StringBuilder();
+                    dateTimeString.Append(array[0].Trim());
+                    dateTimeString.Append(' ');
+                    dateTimeString.Append(array[1].Trim());
+                    DateTime dateTime;
+                    if (!DateTime.TryParseExact(dateTimeString.ToString(), "dd/MM/yyyy HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out dateTime)) {
+                        Logger.Logger.Log.Error($"The date {dateTimeString.ToString()} from line {line} file leap.log was not parced correctly");
+                    }
                     string sscc = array[2].Trim();
-                    Layout layout = new Layout(sscc, dateTime.ToString());
+                    Layout layout = new Layout(sscc, dateTime);
                     layouts.Add(layout);
                     isFileCorrect = true;
                 }

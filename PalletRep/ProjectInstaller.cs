@@ -15,5 +15,10 @@ namespace PalletRep
         {
             InitializeComponent();
         }
+
+        private void AAAAAAAAAAAAAAAAAAAAAAAA_AfterInstall(object sender, InstallEventArgs e)
+        {
+
+        }
     }
 }
