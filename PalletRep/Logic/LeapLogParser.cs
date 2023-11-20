@@ -11,7 +11,8 @@ namespace PalletRep.Logic
 {
     internal class LeapLogParser
     {
-        private ISaveable _saveable;
+        private ISaveable saveToFile;
+        private ISaveable saveToDB;
         private readonly string Mode = ConfigurationManager.AppSettings["Mode"];
         private const string Pattern = @"(\d{2}/\d{2}/\d{4});(\d{2}:\d{2}:\d{2});(00\d{18}$)";
 
@@ -26,14 +27,14 @@ namespace PalletRep.Logic
             {
                 if (Mode.Contains("TXT"))
                 {
-                    _saveable = new FileSaver();
-                    await _saveable.Save(layouts);
+                    saveToFile = FileSaver.GetInstance();
+                    await saveToFile.Save(layouts);
                 }
                 if (Mode.Contains("DB"))
                 {
 
-                    _saveable = new DBSaver();
-                    await _saveable.Save(layouts);
+                    saveToDB = DBSaver.GetInstance();
+                    await saveToDB.Save(layouts);
                 }
 
             } else {
