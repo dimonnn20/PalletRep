@@ -16,7 +16,7 @@ namespace PalletRep.Logic
 {
     internal class DBSaver : ISaveable
     {
-        private readonly string TempFileName = @"C:\Users\makad\AppData\Local\Temp\myTmp.txt";
+        private readonly string TempFileName = @"C:/folderToDel/myTmp.txt";
         private static DBSaver _instance;
         private readonly string ConnectionString = ConfigurationManager.AppSettings["connectionString"];
         private DBSaver()
@@ -47,18 +47,18 @@ namespace PalletRep.Logic
 
         private async Task SaveToQueue(List<Layout> layouts)
         {
-            string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("en-US"));
-            StringBuilder stringBuilder = new StringBuilder();
+            string date = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss", new CultureInfo("en-US"));
             Queue<string> QueueToWrite = new Queue<string>();
             foreach (Layout layout in layouts)
             {
-                stringBuilder.Append("('").Append(date).Append("','").Append(layout.Sscc).Append("','").Append(layout.Date.ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("en-US"))).Append("')\n");
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.Append("('").Append(date).Append("','").Append(layout.Sscc).Append("','").Append(layout.Date.ToString("MM/dd/yyyy HH:mm:ss", new CultureInfo("en-US"))).Append("')");
                 QueueToWrite.Enqueue(stringBuilder.ToString());
 
             }
             try
             {
-                using (StreamWriter writer = new StreamWriter(TempFileName))
+                using (StreamWriter writer = new StreamWriter(TempFileName, true))
                 {
                     foreach (string line in QueueToWrite)
                     {
@@ -90,7 +90,7 @@ namespace PalletRep.Logic
                             lines.Add(line);
                         }
                     }
-                    Logger.Logger.Log.Debug($"Successgully readed {lines.Count()} from temp file" );
+                    Logger.Logger.Log.Debug($"Successgully readed {lines.Count()} from temp file");
                 }
             }
             catch (Exception ex)
@@ -107,8 +107,7 @@ namespace PalletRep.Logic
             }
             stringBuilder.Append(lines[lines.Count - 1]);
             stringBuilder.Append(";");
-            // insertin to DB
-
+            // inserting to DB
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 try
@@ -127,10 +126,6 @@ namespace PalletRep.Logic
                     Logger.Logger.Log.Error("Exception to open connection to database ", ex);
                 }
             }
-
-
-
-
         }
     }
 }
