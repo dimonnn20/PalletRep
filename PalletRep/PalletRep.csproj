@@ -92,7 +92,6 @@
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Logic\DBSaver.cs" />
     <Compile Include="Logic\FileSaver.cs" />
-    <Compile Include="Logic\ISaveable.cs" />
     <Compile Include="Logic\LeapLogParser.cs" />
     <Compile Include="Logic\MyServiceLogic.cs" />
     <Compile Include="Logic\SFTPConnection.cs" />

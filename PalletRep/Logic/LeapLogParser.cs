@@ -11,8 +11,8 @@ namespace PalletRep.Logic
 {
     internal class LeapLogParser
     {
-        private ISaveable saveToFile;
-        private ISaveable saveToDB;
+        private FileSaver saveToFile;
+        private DBSaver saveToDB;
         private readonly string Mode = ConfigurationManager.AppSettings["Mode"];
         private const string Pattern = @"(\d{2}/\d{2}/\d{4});(\d{2}:\d{2}:\d{2});(00\d{18}$)";
 

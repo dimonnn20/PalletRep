@@ -22,6 +22,7 @@ namespace PalletRep.Logic
         {
                 while (_isRunning)
                 {
+                    
                     await Connection.CheckAndProceedFile();
                     await Task.Delay(Convert.ToInt32(ConfigurationManager.AppSettings["Timeout"]));
                 }

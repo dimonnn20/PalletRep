@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PalletRep.Logic
 {
-    internal class FileSaver : ISaveable
+    internal class FileSaver
     {
         private static FileSaver _instance;
 

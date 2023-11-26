@@ -14,13 +14,14 @@ using System.Web;
 
 namespace PalletRep.Logic
 {
-    internal class DBSaver : ISaveable
+    internal class DBSaver
     {
         private readonly string TempFileName = @"C:/folderToDel/myTmp.txt";
         private static DBSaver _instance;
         private readonly string ConnectionString = ConfigurationManager.AppSettings["connectionString"];
         private DBSaver()
         {
+
         }
 
         public static DBSaver GetInstance()
@@ -41,7 +42,6 @@ namespace PalletRep.Logic
         {
             // Save all lines to temp file
             await SaveToQueue(layouts);
-            await TryToSaveToDB();
 
         }
 
@@ -75,56 +75,66 @@ namespace PalletRep.Logic
             }
         }
 
-        private async Task TryToSaveToDB()
+        public async Task TryToSaveToDB()
         {
-            List<string> lines = new List<string>();
-            try
+            while (true)
             {
-                using (StreamReader reader = new StreamReader(TempFileName))
+                if (File.Exists(TempFileName) )
                 {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
+                    if (new FileInfo(TempFileName).Length != 0)
                     {
-                        if (!string.IsNullOrEmpty(line))
+                        List<string> lines = new List<string>();
+                        try
                         {
-                            lines.Add(line);
+                            using (StreamReader reader = new StreamReader(TempFileName))
+                            {
+                                string line;
+                                while ((line = reader.ReadLine()) != null)
+                                {
+                                    if (!string.IsNullOrEmpty(line))
+                                    {
+                                        lines.Add(line);
+                                    }
+                                }
+                                Logger.Logger.Log.Debug($"Successfully readed {lines.Count()} from temp file");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Logger.Log.Error("Exception to read from temp file", ex);
+                        }
+                        // formatting request for insert
+                        StringBuilder stringBuilder = new StringBuilder();
+                        stringBuilder.AppendLine($"INSERT INTO Layout (dateOfEntry,sscc,date) VALUES ");
+                        for (int i = 0; i < lines.Count - 1; i++)
+                        {
+                            stringBuilder.Append(lines[i]);
+                            stringBuilder.Append(",");
+                        }
+                        stringBuilder.Append(lines[lines.Count - 1]);
+                        stringBuilder.Append(";");
+                        // inserting to DB
+                        using (SqlConnection connection = new SqlConnection(ConnectionString))
+                        {
+                            try
+                            {
+                                await connection.OpenAsync();
+                                string query = stringBuilder.ToString();
+                                using (SqlCommand command = new SqlCommand(query, connection))
+                                {
+
+                                    Logger.Logger.Log.Info($"Successfully added {command.ExecuteNonQuery()} line(s) to database");
+                                }
+                                if (File.Exists(TempFileName)) { File.Delete(TempFileName); }
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Logger.Log.Error("Exception to open connection to database ", ex);
+                            }
                         }
                     }
-                    Logger.Logger.Log.Debug($"Successgully readed {lines.Count()} from temp file");
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.Logger.Log.Error("Exception to read from temp file", ex);
-            }
-            // formatting request for insert
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"INSERT INTO Layout (dateOfEntry,sscc,date) VALUES ");
-            for (int i = 0; i < lines.Count - 1; i++)
-            {
-                stringBuilder.Append(lines[i]);
-                stringBuilder.Append(",");
-            }
-            stringBuilder.Append(lines[lines.Count - 1]);
-            stringBuilder.Append(";");
-            // inserting to DB
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
-            {
-                try
-                {
-                    await connection.OpenAsync();
-                    string query = stringBuilder.ToString();
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-
-                        Logger.Logger.Log.Info($"Successfully added {command.ExecuteNonQuery()} line(s) to database");
-                    }
-                    if (File.Exists(TempFileName)) { File.Delete(TempFileName); }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Logger.Log.Error("Exception to open connection to database ", ex);
-                }
+                await Task.Delay(30000);
             }
         }
     }

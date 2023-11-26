@@ -17,6 +17,7 @@ namespace PalletRep
 
         private MyServiceLogic _serviceLogic;
         private ServiceController sc;
+        private DBSaver _dbSaver;
         public Service1()
         {
             InitializeComponent();
@@ -24,6 +25,18 @@ namespace PalletRep
 
         protected override void OnStart(string[] args)
         {
+            _dbSaver = DBSaver.GetInstance();
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await _dbSaver.TryToSaveToDB();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Logger.Log.Error("Exception to save to database ", ex);
+                }
+            });
             
             string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log4net.config");
             log4net.Config.XmlConfigurator.Configure(new FileInfo(configFilePath));
@@ -40,7 +53,7 @@ namespace PalletRep
                 }
                 catch (Exception ex)
                 {
-                    Logger.Logger.Log.Error("Exception in _serviceLogic and try to stop the service ", ex);
+                    Logger.Logger.Log.Error("Exception in _serviceLogic ", ex);
                     Stop();
                 }
             });
