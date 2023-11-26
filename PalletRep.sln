@@ -5,7 +5,9 @@ VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PalletRep", "PalletRep\PalletRep.csproj", "{53EE943E-D6BE-4FBB-92F3-0D10A6B5514B}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupPalletRep2", "SetupPalletRep2\SetupPalletRep2.vdproj", "{9CC255A5-04E1-4CF9-B0F0-64A74DB5A57A}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup1", "Setup1\Setup1.vdproj", "{0BC6AA42-8ECC-42F3-A227-3EEA5330A0DD}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "PalletRepSetup", "PalletRepSetup\PalletRepSetup.vdproj", "{AFAD7F5E-4082-41C9-8317-FF238D7445B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,8 +19,10 @@ Global
 		{53EE943E-D6BE-4FBB-92F3-0D10A6B5514B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53EE943E-D6BE-4FBB-92F3-0D10A6B5514B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53EE943E-D6BE-4FBB-92F3-0D10A6B5514B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9CC255A5-04E1-4CF9-B0F0-64A74DB5A57A}.Debug|Any CPU.ActiveCfg = Debug
-		{9CC255A5-04E1-4CF9-B0F0-64A74DB5A57A}.Release|Any CPU.ActiveCfg = Release
+		{0BC6AA42-8ECC-42F3-A227-3EEA5330A0DD}.Debug|Any CPU.ActiveCfg = Debug
+		{0BC6AA42-8ECC-42F3-A227-3EEA5330A0DD}.Release|Any CPU.ActiveCfg = Release
+		{AFAD7F5E-4082-41C9-8317-FF238D7445B3}.Debug|Any CPU.ActiveCfg = Debug
+		{AFAD7F5E-4082-41C9-8317-FF238D7445B3}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

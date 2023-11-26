@@ -45,7 +45,8 @@ namespace PalletRep.Logic
                                 string line;
                                 while ((line = await reader.ReadLineAsync()) != null)
                                 {
-                                    lines.Add(line);
+                                    if (!string.IsNullOrEmpty(line))
+                                    lines.Add(line.Trim());
                                 }
                                 Logger.Logger.Log.Info("Information from file leap.log readed successfuly");
                                 await LeapLogParser.Proceed(lines);
@@ -77,7 +78,8 @@ namespace PalletRep.Logic
                                     string line;
                                     while ((line = reader.ReadLine()) != null)
                                     {
-                                        lines.Add(line);
+                                        if (!string.IsNullOrEmpty(line))
+                                            lines.Add(line);
                                     }
                                     Logger.Logger.Log.Info("Information from file leap.log readed successfuly");
                                     await LeapLogParser.Proceed(lines);

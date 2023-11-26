@@ -30,7 +30,7 @@ namespace PalletRep
             {
                 try
                 {
-                    await _dbSaver.TryToSaveToDB();
+                    await _dbSaver.StartSavingToDBAsync();
                 }
                 catch (Exception ex)
                 {
@@ -62,8 +62,8 @@ namespace PalletRep
 
         protected override void OnStop()
         {
+            Logger.Logger.Log.Info("The service is stopped");
 
-            
         }
     }
 }

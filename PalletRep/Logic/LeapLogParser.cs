@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -14,7 +15,8 @@ namespace PalletRep.Logic
         private FileSaver saveToFile;
         private DBSaver saveToDB;
         private readonly string Mode = ConfigurationManager.AppSettings["Mode"];
-        private const string Pattern = @"(\d{2}/\d{2}/\d{4});(\d{2}:\d{2}:\d{2});(00\d{18}$)";
+        private const string Pattern = @"^(\d{2}/\d{2}/\d{4});(\d{2}:\d{2}:\d{2});(00\d{18})$";
+        private readonly string PathToWrongData = ConfigurationManager.AppSettings["PathToWrongData"];
 
         public LeapLogParser()
         {   
@@ -23,23 +25,28 @@ namespace PalletRep.Logic
         public async Task Proceed(List<string> lines)
         {
             List<Layout> layouts = Deserialize(lines);
-            if (Mode.Contains("DB") || Mode.Contains("TXT"))
+            if (layouts.Count > 0)
             {
-                if (Mode.Contains("TXT"))
+                if (Mode.Contains("DB") || Mode.Contains("TXT"))
                 {
-                    saveToFile = FileSaver.GetInstance();
-                    await saveToFile.Save(layouts);
+                    if (Mode.Contains("TXT"))
+                    {
+                        saveToFile = FileSaver.GetInstance();
+                        await saveToFile.Save(layouts);
+                    }
+                    if (Mode.Contains("DB"))
+                    {
+
+                        saveToDB = DBSaver.GetInstance();
+                        await saveToDB.Save(layouts);
+                    }
+
                 }
-                if (Mode.Contains("DB"))
+                else
                 {
-
-                    saveToDB = DBSaver.GetInstance();
-                    await saveToDB.Save(layouts);
+                    Logger.Logger.Log.Error("Exception in App.config, line [Mode]");
+                    throw new Exception("Exception in App.config, line [Mode]");
                 }
-
-            } else {
-                Logger.Logger.Log.Error("Exception in App.config, line [Mode]");
-                throw new Exception("Exception in App.config, line [Mode]");
             }
         }
 
@@ -47,7 +54,8 @@ namespace PalletRep.Logic
         {
             bool isFileCorrect = false;
             List<Layout> layouts = new List<Layout>();
-
+            List <string> wrongData = new List<string>();
+            wrongData.Add($"Start wrong data readed from leap.log on {DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")}\n");
             foreach (string line in lines)
             {
                 if (CheckLine(line))
@@ -68,13 +76,28 @@ namespace PalletRep.Logic
                 }
                 else
                 {
-                    Logger.Logger.Log.Error($"The line {line} in file leap.log is incorrect and was not proceeded");
+                    Logger.Logger.Log.Error($"The line: {line} in file leap.log is incorrect and was not proceeded");
+                    wrongData.Add(line);
+                    wrongData.Add("\n");
                 }
+            }
+            wrongData.Add("End\n");
+            wrongData.Add("**********************************\n");
+            if (wrongData.Count > 4) 
+            {
+                using (FileStream stream = new FileStream(PathToWrongData, FileMode.Append))
+                {
+                    foreach (string data in wrongData)
+                    {
+                        stream.Write(Encoding.Default.GetBytes(data), 0, data.Length);
+                    }
+
+                }
+                Logger.Logger.Log.Info($"Wrong data is successfully saved to the file {PathToWrongData}");
             }
             if (!isFileCorrect) 
             {
-                Logger.Logger.Log.Error($"The file leap.log contains incorrect data, please check the file and restart service");
-                throw new Exception("The file leap.log contains incorrect data, please check the file and restart service"); 
+                Logger.Logger.Log.Error($"The file leap.log contains incorrect data");
             }
             return layouts;
         }
@@ -82,6 +105,7 @@ namespace PalletRep.Logic
         private bool CheckLine(string line)
         {
             bool isCorrect = false;
+            if (string.IsNullOrEmpty(line)) { return false; }
             Match match = Regex.Match(line, Pattern);
             if (match.Success) 
             { 

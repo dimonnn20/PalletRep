@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.serviceProcessInstaller1 = new System.ServiceProcess.ServiceProcessInstaller();
-            this.AAAAAAAAAAAAAAAAAAAAAAAA = new System.ServiceProcess.ServiceInstaller();
+            this.PalletRep = new System.ServiceProcess.ServiceInstaller();
             // 
             // serviceProcessInstaller1
             // 
@@ -37,25 +37,25 @@
             this.serviceProcessInstaller1.Password = null;
             this.serviceProcessInstaller1.Username = null;
             // 
-            // AAAAAAAAAAAAAAAAAAAAAAAA
+            // PalletRep
             // 
-            this.AAAAAAAAAAAAAAAAAAAAAAAA.Description = "AAAAAAAAAAAAAAAAA";
-            this.AAAAAAAAAAAAAAAAAAAAAAAA.DisplayName = "AAAAAAAAAAAAAAAAAAA";
-            this.AAAAAAAAAAAAAAAAAAAAAAAA.ServiceName = "Service1";
-            this.AAAAAAAAAAAAAAAAAAAAAAAA.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
-            this.AAAAAAAAAAAAAAAAAAAAAAAA.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.AAAAAAAAAAAAAAAAAAAAAAAA_AfterInstall);
+            this.PalletRep.Description = "Application for reporting pallets";
+            this.PalletRep.DisplayName = "PalletRep";
+            this.PalletRep.ServiceName = "Service1";
+            this.PalletRep.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
+            this.PalletRep.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.AAAAAAAAAAAAAAAAAAAAAAAA_AfterInstall);
             // 
             // ProjectInstaller
             // 
             this.Installers.AddRange(new System.Configuration.Install.Installer[] {
             this.serviceProcessInstaller1,
-            this.AAAAAAAAAAAAAAAAAAAAAAAA});
+            this.PalletRep});
 
         }
 
         #endregion
 
         private System.ServiceProcess.ServiceProcessInstaller serviceProcessInstaller1;
-        private System.ServiceProcess.ServiceInstaller AAAAAAAAAAAAAAAAAAAAAAAA;
+        private System.ServiceProcess.ServiceInstaller PalletRep;
     }
 }
