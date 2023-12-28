@@ -16,8 +16,8 @@ namespace PalletRep.Logic
     internal class SFTPConnection
     {
         private readonly string _host;
-        private readonly string _username = "logopak";
-        private readonly string _password = "J6DqVm&y";
+        private readonly string _username = "***";
+        private readonly string _password = "***";
         //private string _remotePath = "/userapp/software/draw/log/leap.log";
         private string _remotePath = ConfigurationManager.AppSettings["RemotePath"];
 
